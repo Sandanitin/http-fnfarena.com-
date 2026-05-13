@@ -1,0 +1,74 @@
+name: Deploy Backend to Hostinger
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'fnf_backend/**'
+
+jobs:
+  deploy-backend:
+    name: Deploy Backend (CodeIgniter)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          extensions: mbstring, intl, mysqli
+
+      - name: Install Composer Dependencies
+        working-directory: fnf_backend
+        run: composer install --no-dev --optimize-autoloader
+
+      - name: Create Production .env
+        working-directory: fnf_backend
+        run: |
+          cat > .env << 'EOF'
+          CI_ENVIRONMENT = production
+
+          CORS_ALLOWED_ORIGINS=https://fnfarena.com,https://www.fnfarena.com,https://admin.fnfarena.com,https://cms.fnfarena.com
+          CORS_ALLOW_CREDENTIALS=true
+
+          app.baseURL = 'https://fnfarena.com/api'
+
+          JWT_SECRET=${{ secrets.JWT_SECRET }}
+          JWT_EXPIRATION=28800
+
+          # Cloudflare R2
+          R2_ENDPOINT="${{ secrets.R2_ENDPOINT }}"
+          R2_ACCESS_KEY="${{ secrets.R2_ACCESS_KEY }}"
+          R2_SECRET_KEY="${{ secrets.R2_SECRET_KEY }}"
+          R2_BUCKET="images"
+          CDN_BASE_URL="${{ secrets.CDN_BASE_URL }}"
+
+          database.default.hostname = localhost
+          database.default.database = u177524058_FNFArena
+          database.default.username = u177524058_FNFArena
+          database.default.password = ${{ secrets.DB_PASSWORD }}
+          database.default.DBDriver = MySQLi
+          database.default.DBPrefix =
+          database.default.port = 3306
+          EOF
+
+      - name: Deploy Backend via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: 145.79.212.7
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./fnf_backend/
+          server-dir: /public_html/api/
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
+            **/tests/**
+            **/.gitignore
+            **/phpunit.xml.dist
+            **/test_ftp.py

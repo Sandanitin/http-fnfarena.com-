@@ -1,0 +1,17 @@
+# Large zip files
+*.zip
+
+# Test files
+test_ftp.py
+local_server/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Node modules
+node_modules/
+
+# Environment files (sensitive)
+.env
+*.env.local

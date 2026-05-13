@@ -1,0 +1,29 @@
+name: Deploy CMS to Hostinger
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'fnf_cms_build/**'
+
+jobs:
+  deploy-cms:
+    name: Deploy CMS Panel
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Deploy CMS via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: 145.79.212.7
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./fnf_cms_build/dist/
+          server-dir: /public_html/cms/
+          exclude: |
+            **/.git*
+            **/.git*/**
