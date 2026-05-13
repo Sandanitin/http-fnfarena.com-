@@ -19,7 +19,7 @@ jobs:
       - name: Deploy Client via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
-          server: 145.79.212.7
+          server: ${{ secrets.HOSTINGER_FTP_SERVER }}
           username: ${{ secrets.HOSTINGER_FTP_USERNAME }}
           password: ${{ secrets.HOSTINGER_FTP_PASSWORD }}
           local-dir: ./FNF_build_client/dist/
