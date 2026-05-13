@@ -48,8 +48,8 @@ jobs:
           CDN_BASE_URL="${{ secrets.CDN_BASE_URL }}"
 
           database.default.hostname = localhost
-          database.default.database = u177524058_FNFArena
-          database.default.username = u177524058_FNFArena
+          database.default.database = u882069120_Vikrin
+          database.default.username = u882069120_Vikrin
           database.default.password = ${{ secrets.DB_PASSWORD }}
           database.default.DBDriver = MySQLi
           database.default.DBPrefix =
