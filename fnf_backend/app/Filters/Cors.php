@@ -11,7 +11,25 @@ class Cors implements FilterInterface
         'http://localhost:3000',
         'http://localhost:5173',
         'https://acsdev.in',
+        'https://fnfarena.com',
+        'https://www.fnfarena.com',
+        'https://admin.fnfarena.com',
+        'https://cms.fnfarena.com',
     ];
+
+    public function __construct()
+    {
+        $envOrigins = getenv('CORS_ALLOWED_ORIGINS') ?: (isset($_ENV['CORS_ALLOWED_ORIGINS']) ? $_ENV['CORS_ALLOWED_ORIGINS'] : null);
+        if ($envOrigins) {
+            $origins = explode(',', $envOrigins);
+            foreach ($origins as $origin) {
+                $trimmed = trim($origin);
+                if ($trimmed && !in_array($trimmed, $this->allowedOrigins, true)) {
+                    $this->allowedOrigins[] = $trimmed;
+                }
+            }
+        }
+    }
 
     private function applyCors(RequestInterface $request, ResponseInterface $response): ResponseInterface
     {
