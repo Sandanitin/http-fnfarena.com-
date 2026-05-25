@@ -1,0 +1,310 @@
+@import url('https://fonts.googleapis.com/css2?family=Sansita+One&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Comic+Neue:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=Sansita:ital,wght@0,400;0,700;0,800;0,900;1,400;1,700;1,800;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Comic+Neue:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Sansita:ital,wght@0,400;0,700;0,800;0,900;1,400;1,700;1,800;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&display=swap');
+
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html, body {
+  overflow-x: hidden;
+}
+
+@keyframes fadeIn {
+  0% { opacity: 0; transform: translateY(8px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade {
+  animation: fadeIn 0.8s ease forwards;
+}
+
+
+@layer utilities {
+  .checkered-pattern {
+    background-image:
+      linear-gradient(45deg, white 25%, transparent 25%),
+      linear-gradient(-45deg, white 25%, transparent 25%),
+      linear-gradient(45deg, transparent 75%, white 75%),
+      linear-gradient(-45deg, transparent 75%, white 75%);
+    background-size: 20px 20px;
+    background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+  }
+
+  .perspective-container {
+    perspective: 1500px;
+  }
+
+  .transform-3d {
+    transform-style: preserve-3d;
+  }
+
+  .perspective-left {
+    transform: rotateY(25deg);
+    transform-origin: right center;
+  }
+
+  .perspective-center {
+    position: relative;
+    z-index: 10;
+  }
+
+  .perspective-right {
+    transform: rotateY(-25deg);
+    transform-origin: left center;
+  }
+
+  .curved-top {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background: linear-gradient(to bottom, rgb(220, 38, 38), transparent);
+    clip-path: polygon(0 0, 100% 0, 100% 60%, 50% 35%, 0 60%);
+    z-index: 20;
+  }
+
+  .curved-bottom {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background: linear-gradient(to top, rgb(220, 38, 38), transparent);
+    clip-path: polygon(0 40%, 50% 65%, 100% 40%, 100% 100%, 0 100%);
+    z-index: 20;
+  }
+}
+
+@media (max-width: 768px) {
+  .perspective-left {
+    transform: rotateY(15deg);
+  }
+
+  .perspective-right {
+    transform: rotateY(-15deg);
+  }
+}
+
+.split-top {
+  animation: splitTop 1.3s cubic-bezier(.2,.9,.2,1) forwards;
+  transform: translateY(-60px);
+  opacity: 0;
+}
+
+.split-bottom {
+  animation: splitBottom 1.3s cubic-bezier(.2,.9,.2,1) forwards;
+  transform: translateY(60px);
+  opacity: 0;
+}
+
+@keyframes splitTop {
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes splitBottom {
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+.what-bring-section::after {
+  content: "";
+  position: absolute;
+  top: 40%;
+  right: -350px;
+  transform: translateY(-50%);
+
+  width: 900px;
+  height: 900px;
+
+  border-radius: 50%;
+  pointer-events: none;
+
+  background: radial-gradient(
+    circle,
+    rgba(255,255,255,0.10) 0%,
+    rgba(255,255,255,0.06) 35%,
+    rgba(255,255,255,0.03) 60%,
+    rgba(255,255,255,0) 90%
+  );
+
+  opacity: 0.5;
+}
+/* popup (runs once) kept visually similar, then float animation starts after it ends */
+
+/* popup keyframes (short, runs once) */
+@keyframes popup1 {
+  0%   { transform: translateY(12px) scale(0.82) rotate(12deg); opacity: 0; filter: blur(0px); }
+  40%  { transform: translateY(0px)  scale(1.06) rotate(14deg); opacity: 1; filter: blur(0px); }
+  70%  { transform: translateY(-6px)  scale(0.98) rotate(14deg); filter: blur(0px); }
+  100% { transform: translateY(0px)   scale(1)    rotate(12deg); opacity: 1; filter: blur(0px); }
+}
+
+@keyframes popup2 {
+  0%   { transform: translateY(14px) scale(0.80) rotate(12deg); opacity: 0; filter: blur(0px); }
+  40%  { transform: translateY(0px)  scale(1.08) rotate(14deg); opacity: 1; filter: blur(0px); }
+  70%  { transform: translateY(-5px)  scale(0.99) rotate(15deg); filter: blur(0px); }
+  100% { transform: translateY(0px)   scale(1)    rotate(12deg); opacity: 1; filter: blur(0px); }
+}
+
+@keyframes popup3 {
+  0%   { transform: translateY(16px) scale(0.78) rotate(15deg); opacity: 0; filter: blur(0px); }
+  40%  { transform: translateY(0px)  scale(1.10) rotate(17deg); opacity: 1; filter: blur(0px); }
+  70%  { transform: translateY(-7px)  scale(0.97) rotate(16deg); filter: blur(0px); }
+  100% { transform: translateY(0px)   scale(1)    rotate(15deg); opacity: 1; filter: blur(0px); }
+}
+
+/* floating keyframes (runs infinitely AFTER popup finishes) */
+/* these include filter blur so images become slightly blurred while floating */
+@keyframes float1 {
+  0%   { transform: translateY(0px)    rotate(12deg); filter: blur(0px); }
+  50%  { transform: translateY(-10px)  rotate(14deg); filter: blur(2px); }
+  100% { transform: translateY(0px)    rotate(12deg); filter: blur(1px); }
+}
+
+@keyframes float2 {
+  0%   { transform: translateY(0px)    rotate(12deg); filter: blur(0px); }
+  50%  { transform: translateY(-8px)   rotate(15deg); filter: blur(1.8px); }
+  100% { transform: translateY(0px)    rotate(12deg); filter: blur(0.9px); }
+}
+
+@keyframes float3 {
+  0%   { transform: translateY(0px)    rotate(15deg); filter: blur(0px); }
+  50%  { transform: translateY(-12px)  rotate(16deg); filter: blur(2.2px); }
+  100% { transform: translateY(0px)    rotate(15deg); filter: blur(1px); }
+}
+
+/* Combined-animations for each image:
+   - popup runs once and leaves the element in its final pose (animation-fill-mode: both / forwards)
+   - float starts after popup ends (use popup duration as the delay), runs infinitely
+   adjust durations if you want different pacing */
+
+.animate-popup1 {
+  will-change: transform, filter;
+  /* popup1: 0.75s (runs once), float1: 4.2s starts after 0.75s */
+  animation:
+    popup1 1.4s cubic-bezier(.2,.9,.3,1) 0s 1 forwards,
+    float1 4.2s cubic-bezier(.2,.9,.3,1) 0.75s infinite normal both;
+}
+
+.animate-popup2 {
+  will-change: transform, filter;
+  /* popup2: 0.9s, float2: 5s starting after 0.9s */
+  animation:
+    popup2 1.6s cubic-bezier(.2,.9,.3,1) 0s 1 forwards,
+    float2 5s cubic-bezier(.2,.9,.3,1) 0.9s infinite normal both;
+}
+
+.animate-popup3 {
+  will-change: transform, filter;
+  /* popup3: 1s, float3: 5.8s starting after 1s */
+  animation:
+    popup3 1s cubic-bezier(.2,.9,.3,1) 0s 1 forwards,
+    float3 5.8s cubic-bezier(.2,.9,.3,1) 1s infinite normal both;
+}
+
+/* optional: reduce blur on small screens for readability */
+@media (max-width: 768px) {
+  @keyframes float1 { 50% { filter: blur(1px); } 100% { filter: blur(0.6px); } }
+  @keyframes float2 { 50% { filter: blur(1px); } 100% { filter: blur(0.6px); } }
+  @keyframes float3 { 50% { filter: blur(1.2px); } 100% { filter: blur(0.6px); } }
+}
+
+/* --- popup for the initial group (poppy, snappy) --- */
+@keyframes popupFloat {
+  0% {
+    opacity: 0;
+    transform: scale(0.45) translateY(40px) rotate(var(--rotate));
+  }
+  45% {
+    opacity: 1;
+    transform: scale(1.03) translateY(-6px) rotate(var(--rotate));
+  }
+  100% {
+    opacity: 1;
+    transform: scale(0.88) translateY(-30px) rotate(var(--rotate-end));
+  }
+}
+.animate-popupFloat {
+  animation: popupFloat 2.2s cubic-bezier(.2,.9,.2,1) forwards;
+}
+
+/* --- popup for the ease-in-out single image(s) --- */
+@keyframes popupEase {
+  0% {
+    opacity: 0;
+    transform: scale(0.6) translateY(30px) rotate(var(--rotate));
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.03) translateY(-8px) rotate(calc(var(--rotate) * 0.6));
+  }
+  100% {
+    opacity: 1;
+    transform: scale(0.92) translateY(-20px) rotate(var(--rotate-end));
+  }
+}
+.animate-popupEase {
+  animation: popupEase 1.1s ease-in-out forwards;
+}
+
+/* optional: a subtle infinite float after the popup finishes */
+@keyframes subtleFloat {
+  0% { transform: translateY(-6px); }
+  50% { transform: translateY(-12px); }
+  100% { transform: translateY(-6px); }
+}
+.float-loop {
+  animation: subtleFloat 4s ease-in-out infinite;
+  animation-delay: 2.4s; /* start after popup completes */
+}
+
+
+/* global.css or a module */
+.slant-bottom-right {
+  /* fallback for some old browsers */
+  -webkit-clip-path: polygon(0 0, 100% 0, 100% 78%, 88% 100%, 0 100%);
+  clip-path: polygon(0 0, 100% 0, 100% 78%, 88% 100%, 0 100%);
+
+  /* optional: keep border radius visually nice */
+  border-radius: 12px;
+
+  /* for performance */
+  will-change: clip-path;
+}
+
+@keyframes moveLeft {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-100%); }
+}
+
+@keyframes moveRight {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(0); }
+}
+
+.animate-moveLeft {
+  animation: moveLeft 8s linear infinite;
+}
+
+.animate-moveRight {
+  animation: moveRight 8s linear infinite;
+}
+@keyframes carMove {
+  0% {
+    transform: translateX(-200px);
+  }
+  100% {
+    transform: translateX(100vw);
+  }
+}
+.car-move {
+  animation: carMove 4s linear forwards;
+}

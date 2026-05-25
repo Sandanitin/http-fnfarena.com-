@@ -1,0 +1,24 @@
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+
+  # 1. Redirect /ADMIN or /Admin (case-insensitive) to /admin/
+  # NC flag makes the match case-insensitive
+  RewriteCond %{REQUEST_URI} ^/admin [NC]
+  RewriteCond %{REQUEST_URI} !^/admin/
+  RewriteRule ^(.*)$ /admin/ [R=301,L]
+
+  # 2. Redirect /CMS or /Cms (case-insensitive) to /cms/
+  RewriteCond %{REQUEST_URI} ^/cms [NC]
+  RewriteCond %{REQUEST_URI} !^/cms/
+  RewriteRule ^(.*)$ /cms/ [R=301,L]
+
+  # 3. SPA Routing for Player Client SPA
+  # If request is not a physical file/folder, and not under /admin, /cms, or /api, serve index.html
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteCond %{REQUEST_URI} !^/admin
+  RewriteCond %{REQUEST_URI} !^/cms
+  RewriteCond %{REQUEST_URI} !^/api
+  RewriteRule . /index.html [L]
+</IfModule>
