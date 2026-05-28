@@ -1,36 +1,27 @@
 import ftplib
 import io
 
-host = '145.79.213.144'
-user = 'u882069120.lightcoral-ferret-563515.hostingersite.com'
-password = 'Nithin06@'
+host = 'fnfarena.com'
+user = 'u205277930'
+password = '3.&av9olrZrb)VRb+rO/'
 
 try:
-    print("Connecting to FTP...")
     ftp = ftplib.FTP(host)
     ftp.login(user, password)
-    print("Login successful!")
     
-    ftp.cwd('/public_html')
-    print("Listing files:")
-    files = ftp.nlst()
-    print(files)
-    
-    # Try to list with -la to see hidden files
-    print("\nDetailed listing:")
-    ftp.retrlines('LIST', print)
-    
-    # Try to download .htaccess
-    print("\nTrying to read .htaccess:")
+    # 1. Inspect api/.htaccess
+    ftp.cwd('/domains/fnfarena.com/public_html/api')
     bio = io.BytesIO()
-    try:
-        ftp.retrbinary('RETR .htaccess', bio.write)
-        print("--- .htaccess Content ---")
-        print(bio.getvalue().decode('utf-8'))
-        print("-------------------------")
-    except Exception as e:
-        print("Could not retrieve .htaccess:", e)
-        
+    ftp.retrbinary('RETR .htaccess', bio.write)
+    print("=== api/.htaccess ===")
+    print(bio.getvalue().decode('utf-8'))
+    
+    # 2. Inspect api/.env
+    bio = io.BytesIO()
+    ftp.retrbinary('RETR .env', bio.write)
+    print("\n=== api/.env ===")
+    print(bio.getvalue().decode('utf-8'))
+    
     ftp.quit()
 except Exception as e:
-    print("FTP Error:", e)
+    print("Error:", e)
