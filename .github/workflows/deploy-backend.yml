@@ -6,6 +6,8 @@ on:
       - main
     paths:
       - 'fnf_backend/**'
+      - '.github/workflows/deploy-backend.yml'
+  workflow_dispatch:
 
 jobs:
   deploy-backend:
