@@ -58,20 +58,54 @@ jobs:
           database.default.port = 3306
           EOF
 
+      - name: Package Backend Files into ZIP
+        working-directory: fnf_backend
+        run: |
+          # Create unzip.php script
+          cat > unzip.php << 'EOF'
+          <?php
+          $zipFile = 'backend.zip';
+          if (!file_exists($zipFile)) {
+              die("Zip file not found.");
+          }
+          $zip = new ZipArchive;
+          if ($zip->open($zipFile) === TRUE) {
+              $zip->extractTo(__DIR__);
+              $zip->close();
+              unlink($zipFile);
+              unlink(__FILE__);
+              echo "SUCCESS";
+          } else {
+              echo "FAILED";
+          }
+          EOF
+
+          # Create zip
+          zip -r backend.zip . -x "tests/*" -x "*.git*"
+
+          # Move to deploy folder
+          mkdir deploy_temp
+          mv backend.zip deploy_temp/
+          mv unzip.php deploy_temp/
+
       - name: Deploy Backend via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: 147.93.99.216
           username: ${{ secrets.HOSTINGER_FTP_USERNAME }}
           password: ${{ secrets.HOSTINGER_FTP_PASSWORD }}
-          local-dir: ./fnf_backend/
+          local-dir: ./fnf_backend/deploy_temp/
           server-dir: /public_html/api/
           timeout: 600000
-          exclude: |
-            **/.git*
-            **/.git*/**
-            **/node_modules/**
-            **/tests/**
-            **/.gitignore
-            **/phpunit.xml.dist
-            **/test_ftp.py
+
+      - name: Trigger Remote Extraction
+        run: |
+          echo "Extracting backend.zip on the server..."
+          response=$(curl -k -s https://fnfarena.com/api/unzip.php)
+          echo "Server Response: $response"
+          if [ "$response" != "SUCCESS" ]; then
+            echo "Error: Extraction failed or unzip.php returned failure."
+            exit 1
+          fi
+          echo "Extraction completed successfully!"
+
