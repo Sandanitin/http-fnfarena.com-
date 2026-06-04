@@ -465,7 +465,8 @@ class AuthController extends ResourceController
             ]
         ];
     
-        $emailService->setFrom('noreply@acsprod.info', 'R-ED LABS');
+        $emailConfig = config('Email');
+        $emailService->setFrom($emailConfig->fromEmail, $emailConfig->fromName);
         $emailService->setTo($email);
         $emailService->setSubject('Your OTP Code');
     

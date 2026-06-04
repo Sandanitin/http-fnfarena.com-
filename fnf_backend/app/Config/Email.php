@@ -6,16 +6,16 @@ use CodeIgniter\Config\BaseConfig;
 
 class Email extends BaseConfig
 {
-    public string $fromEmail  = 'noreply@acsprod.info';
+    public string $fromEmail  = 'groupbooking@fnfarena.com';
     public string $fromName   = 'FNF';
 
     public string $protocol = 'smtp';
 
-    public string $SMTPHost = 'mail.acsprod.info';
-    public string $SMTPUser = 'noreply@acsprod.info';
-    public string $SMTPPass = '3{+#k[3%*E9b';
-    public int    $SMTPPort = 465;
-    public string $SMTPCrypto = 'ssl';
+    public string $SMTPHost = 'smtp.office365.com';
+    public string $SMTPUser = 'groupbooking@fnfarena.com';
+    public string $SMTPPass = '';
+    public int    $SMTPPort = 587;
+    public string $SMTPCrypto = 'tls';
 
     public int    $SMTPTimeout = 15;
     public bool   $SMTPKeepAlive = false;
@@ -35,4 +35,18 @@ class Email extends BaseConfig
     public bool   $BCCBatchMode = false;
     public int    $BCCBatchSize = 200;
     public bool   $DSN = false;
+
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->fromEmail  = getenv('email.fromEmail') ?: 'groupbooking@fnfarena.com';
+        $this->fromName   = getenv('email.fromName') ?: 'FNF';
+        $this->protocol   = getenv('email.protocol') ?: 'smtp';
+        $this->SMTPHost   = getenv('email.SMTPHost') ?: 'smtp.office365.com';
+        $this->SMTPUser   = getenv('email.SMTPUser') ?: 'groupbooking@fnfarena.com';
+        $this->SMTPPass   = getenv('email.SMTPPass') ?: (getenv('SMTP_PASS') ?: '');
+        $this->SMTPPort   = (int)(getenv('email.SMTPPort') ?: 587);
+        $this->SMTPCrypto = getenv('email.SMTPCrypto') ?: 'tls';
+    }
 }

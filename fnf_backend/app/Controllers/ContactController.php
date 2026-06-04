@@ -44,8 +44,8 @@ class ContactController extends ResourceController
     
         $email = \Config\Services::email();
     
-        // MUST be same as SMTP user
-        $email->setFrom($data['email'], 'Website Contact');
+        $emailConfig = config('Email');
+        $email->setFrom($emailConfig->fromEmail, 'Website Contact (' . $data['name'] . ')');
     
         // Admin / Client email
         $email->setTo('sudhakarbv144@gmail.com');
