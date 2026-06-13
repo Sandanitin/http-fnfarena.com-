@@ -61,8 +61,8 @@ jobs:
       - name: Package Backend Files into ZIP
         working-directory: fnf_backend
         run: |
-          # Create unzip.php script
-          cat > unzip.php << 'EOF'
+          # Create deploy_extractor.php script
+          cat > deploy_extractor.php << 'EOF'
           <?php
           ini_set('display_errors', 1);
           error_reporting(E_ALL);
@@ -97,7 +97,7 @@ jobs:
           # Move to deploy folder
           mkdir deploy_temp
           mv backend.zip deploy_temp/
-          mv unzip.php deploy_temp/
+          mv deploy_extractor.php deploy_temp/
 
       - name: Deploy Backend via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
@@ -107,19 +107,21 @@ jobs:
           password: ${{ secrets.HOSTINGER_FTP_PASSWORD }}
           local-dir: ./fnf_backend/deploy_temp/
           server-dir: /public_html/api/
+          protocol: ftps
+          port: 21
           timeout: 600000
 
       - name: Trigger Remote Extraction
         run: |
           echo "Extracting backend.zip on the server..."
-          HTTP_STATUS=$(curl -k -s -o response.txt -w "%{http_code}" https://fnfarena.com/api/unzip.php)
+          HTTP_STATUS=$(curl -k -s -o response.txt -w "%{http_code}" https://fnfarena.com/api/deploy_extractor.php)
           response=$(cat response.txt)
           
           echo "HTTP Status: $HTTP_STATUS"
           echo "Server Response: $response"
           
           if [ "$response" != "SUCCESS" ]; then
-            echo "Error: Extraction failed or unzip.php returned failure."
+            echo "Error: Extraction failed or deploy_extractor.php returned failure."
             exit 1
           fi
           echo "Extraction completed successfully!"
