@@ -107,7 +107,7 @@ jobs:
           password: ${{ secrets.HOSTINGER_FTP_PASSWORD }}
           local-dir: ./fnf_backend/deploy_temp/
           server-dir: /public_html/api/
-          protocol: ftps
+          protocol: ftp
           port: 21
           timeout: 600000
 
