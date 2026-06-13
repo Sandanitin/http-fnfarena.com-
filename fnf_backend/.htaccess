@@ -1,6 +1,12 @@
 # Disable directory browsing
 Options -Indexes
 
+# Block access to hidden files like .env
+<FilesMatch "^\.">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
 # -----------------------------
 # CORS (Apache-level)
 # -----------------------------
