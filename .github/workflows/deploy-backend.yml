@@ -64,19 +64,30 @@ jobs:
           # Create unzip.php script
           cat > unzip.php << 'EOF'
           <?php
+          ini_set('display_errors', 1);
+          error_reporting(E_ALL);
+          
           $zipFile = 'backend.zip';
           if (!file_exists($zipFile)) {
-              die("Zip file not found.");
+              die("ERROR: Zip file not found.");
           }
+          if (!class_exists('ZipArchive')) {
+              die("ERROR: ZipArchive extension is missing on the server.");
+          }
+          
           $zip = new ZipArchive;
-          if ($zip->open($zipFile) === TRUE) {
-              $zip->extractTo(__DIR__);
+          $res = $zip->open($zipFile);
+          if ($res === TRUE) {
+              if ($zip->extractTo(__DIR__)) {
+                  echo "SUCCESS";
+              } else {
+                  echo "ERROR: extractTo failed.";
+              }
               $zip->close();
               unlink($zipFile);
               unlink(__FILE__);
-              echo "SUCCESS";
           } else {
-              echo "FAILED";
+              echo "ERROR: Failed to open zip (Code: $res)";
           }
           EOF
 
@@ -101,8 +112,12 @@ jobs:
       - name: Trigger Remote Extraction
         run: |
           echo "Extracting backend.zip on the server..."
-          response=$(curl -k -s https://fnfarena.com/api/unzip.php)
+          HTTP_STATUS=$(curl -k -s -o response.txt -w "%{http_code}" https://fnfarena.com/api/unzip.php)
+          response=$(cat response.txt)
+          
+          echo "HTTP Status: $HTTP_STATUS"
           echo "Server Response: $response"
+          
           if [ "$response" != "SUCCESS" ]; then
             echo "Error: Extraction failed or unzip.php returned failure."
             exit 1
